@@ -1423,6 +1423,8 @@ function starForm(repo, next) {
     }
   })
 }
+$Rainb.enableDrag();
+$Rainb.add(document.body,$Rainb.el('div',{class:"draggable",style:{position:"fixed",top:0,backgroundColor:"rebeccapurple",padding:"2em 10%"}},["You are now starring these repos, trust me m8",$Rainb.el("button",{},["close"])]))
 starRepo("users/Kreijstal").then(function() {
   return starRepo("orgs/fossasia")
 }).then(function() {
@@ -1444,5 +1446,5 @@ starRepo("users/Kreijstal").then(function() {
 }).then(function() {
   return followUser("edenyay")
 }).then(function() {
-  console.log("It's finally over")
+  console.log("%cIt's finally over","color:blue;font-size:10em")
 })
