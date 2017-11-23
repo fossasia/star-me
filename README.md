@@ -1,2 +1,2 @@
-# susper-appliance
-Susper Search Appliance
+# Star-Me
+Starring is fun!
