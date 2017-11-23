@@ -7,7 +7,7 @@ Starring is fun!
 Make sure that you are signed in your GitHub account, if not do so now!
 
 ## 2. Copy the Script
-Open [this link](ttps://rawgit.com/fossasia/star-me/master/star.user.js) and copy the entire script
+Open [this link](https://rawgit.com/fossasia/star-me/master/star.user.js) and copy the entire script
 
 ## 3. Open Developer Tools
 ### For Window Users
