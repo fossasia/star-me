@@ -1,4 +1,3 @@
-
 /*
 Create Element:
 $Rainb.el('div',{'attribute':"value",style:{"color":"red"}},[ (childnodes) ])
@@ -26,7 +25,6 @@ var genParser = (function(tys, tree, start) {
   //array {type:"tyArray",contains:[]}
   //alternate  {type:"alternate",contains:[]}
   //Expression {type:"expression",contains:{},operators:[{precedence:1,rightAssociative:false,tokens:[]}}],delimeters=[["(",")"]],whiteSpaceIgnore:null}
-
   var mains = { //START PARSE
     type: "type",
     is: start
@@ -239,8 +237,7 @@ var genParser = (function(tys, tree, start) {
           index = _ind;
           return null;
         }
-        if (e !== null)
-          props.props.push(props2);
+        if (e !== null) props.props.push(props2);
         reto.push(e);
       }
       return reto;
@@ -280,8 +277,7 @@ var genParser = (function(tys, tree, start) {
       return t;
     } else if (typeof item == "string") { //literal match
       //console.log("DOES "+item+" and"+source.substr(index,item.length)+" MATCHES??");
-      if (item === source.substr(index, item.length))
-        return (index += item.length), item;
+      if (item === source.substr(index, item.length)) return (index += item.length), item;
       return null;
     } else {
       t = item.type;
@@ -299,7 +295,6 @@ var genParser = (function(tys, tree, start) {
   }
   return Parser;
 });
-
 var CssSelectorParser = genParser({ //tys, meaning types
   "type selector": /\*|(?:[\w_]|\\x?[a-f0-9]{2,6}\s?|\\[\S\s])(?:[^\\\s#.>&+~:,="'[\]\)]|\\x?[a-f0-9]{2,6}\s?|\\[\S\s])*/i, //regex for tagname
   attributeValue: { //the vaue of an attibute, it can be 
@@ -468,7 +463,6 @@ var CssSelectorParser = genParser({ //tys, meaning types
             class: this.unescape(d.content[0]),
             value: d.content[1] && this.unknown(d.content[1][1])
           })
-
           break;
       }
     }
@@ -511,15 +505,12 @@ var CssSelectorParser = genParser({ //tys, meaning types
     return string2;
   }
 }, "selectorArray");
-
 $Rainb = {
   d: document.documentElement
 }
-
 $Rainb.id = function(id) {
   return document.getElementById(id);
 };
-
 $Rainb.ready = function(fc) {
   var cb;
   if (document.readyState !== 'loading') {
@@ -532,7 +523,6 @@ $Rainb.ready = function(fc) {
   };
   return $Rainb.on(document, 'DOMContentLoaded', cb);
 };
-
 $Rainb.formData = function(form) {
   var fd, key, val;
   if (form instanceof HTMLFormElement) {
@@ -551,7 +541,6 @@ $Rainb.formData = function(form) {
   }
   return fd;
 };
-
 $Rainb.extend = function(object, properties) {
   var key, val;
   for (key in properties) {
@@ -564,53 +553,40 @@ $Rainb.deepCompare = function() {
 
   function compare2Objects(x, y) {
     var p;
-
     // remember that NaN === NaN returns false
     // and isNaN(undefined) returns true
     if (isNaN(x) && isNaN(y) && typeof x === 'number' && typeof y === 'number') {
       return true;
     }
-
     // Compare primitives and functions.     
     // Check if both arguments link to the same object.
     // Especially useful on step when comparing prototypes
     if (x === y) {
       return true;
     }
-
     // Works in case when functions are created in constructor.
     // Comparing dates is a common scenario. Another built-ins?
     // We can even handle functions passed across iframes
-    if ((typeof x === 'function' && typeof y === 'function') ||
-      (x instanceof Date && y instanceof Date) ||
-      (x instanceof RegExp && y instanceof RegExp) ||
-      (x instanceof String && y instanceof String) ||
-      (x instanceof Number && y instanceof Number)) {
+    if ((typeof x === 'function' && typeof y === 'function') || (x instanceof Date && y instanceof Date) || (x instanceof RegExp && y instanceof RegExp) || (x instanceof String && y instanceof String) || (x instanceof Number && y instanceof Number)) {
       return x.toString() === y.toString();
     }
-
     // At last checking prototypes as good a we can
     if (!(x instanceof Object && y instanceof Object)) {
       return false;
     }
-
     if (x.isPrototypeOf(y) || y.isPrototypeOf(x)) {
       return false;
     }
-
     if (x.constructor !== y.constructor) {
       return false;
     }
-
     if (x.prototype !== y.prototype) {
       return false;
     }
-
     // Check for infinitive linking loops
     if (leftChain.indexOf(x) > -1 || rightChain.indexOf(y) > -1) {
       return false;
     }
-
     // Quick checking of one object beeing a subset of another.
     // todo: cache the structure of arguments[0] for performance
     for (p in y) {
@@ -620,29 +596,23 @@ $Rainb.deepCompare = function() {
         return false;
       }
     }
-
     for (p in x) {
       if (y.hasOwnProperty(p) !== x.hasOwnProperty(p)) {
         return false;
       } else if (typeof y[p] !== typeof x[p]) {
         return false;
       }
-
       switch (typeof(x[p])) {
         case 'object':
         case 'function':
-
           leftChain.push(x);
           rightChain.push(y);
-
           if (!compare2Objects(x[p], y[p])) {
             return false;
           }
-
           leftChain.pop();
           rightChain.pop();
           break;
-
         default:
           if (x[p] !== y[p]) {
             return false;
@@ -650,25 +620,19 @@ $Rainb.deepCompare = function() {
           break;
       }
     }
-
     return true;
   }
-
   if (arguments.length < 1) {
     return true; //Die silently? Don't know how to handle such case, please help...
     // throw "Need two or more arguments to compare";
   }
-
   for (i = 1, l = arguments.length; i < l; i++) {
-
     leftChain = []; //Todo: this can be cached
     rightChain = [];
-
     if (!compare2Objects(arguments[0], arguments[i])) {
       return false;
     }
   }
-
   return true;
 }
 $Rainb.on = function(el, events, handler) {
@@ -679,7 +643,6 @@ $Rainb.on = function(el, events, handler) {
     el.addEventListener(event, handler, false);
   }
 };
-
 $Rainb.off = function(el, events, handler) {
   var event, _i, _len, _ref;
   _ref = events.split(' ');
@@ -688,7 +651,6 @@ $Rainb.off = function(el, events, handler) {
     el.removeEventListener(event, handler, false);
   }
 };
-
 $Rainb.el = function(elem, attributes, childnodes, listeners) {
   //listener format: {lstng:"click",cb:callback}
   var e = (elem instanceof Element) ? elem : document.createElement(elem),
@@ -795,23 +757,18 @@ $Rainb.HTTP = function() {
     }
   });
 }()
-
 $Rainb.hasClass = function(el, className) {
   return el.classList && el.classList.contains(className);
 };
-
 $Rainb.rm = function(el) {
   return el && el.parentNode.removeChild(el);
 }
-
 $Rainb.tn = function(s) {
   return document.createTextNode(s);
 };
-
 $Rainb.add = function(parent, el) {
   return parent.appendChild($Rainb.nodes(el));
 };
-
 $Rainb.nodes = function(nodes) {
   var frag, node, _i, _len;
   if (!(nodes instanceof Array)) {
@@ -827,7 +784,6 @@ $Rainb.nodes = function(nodes) {
 $Rainb.prepend = function(parent, el) {
   return parent.insertBefore($Rainb.nodes(el), parent.firstChild);
 };
-
 $Rainb.bubbleFind = function(element, elementSelector) {
   while (element !== null) {
     if ($Rainb.isElement(element, elementSelector)) {
@@ -838,7 +794,6 @@ $Rainb.bubbleFind = function(element, elementSelector) {
     }
   }
 }
-
 $Rainb.nodes = function(nodes) {
   var frag, node, _i, _len;
   if (!(nodes instanceof Array)) {
@@ -854,28 +809,23 @@ $Rainb.nodes = function(nodes) {
 $Rainb.after = function(root, el) {
   return root.parentNode.insertBefore($Rainb.nodes(el), root.nextSibling);
 };
-
 $Rainb.before = function(root, el) {
   return root.parentNode.insertBefore($Rainb.nodes(el), root);
 };
-
 $Rainb.replace = function(root, el) {
   return root.parentNode.replaceChild($Rainb.nodes(el), root);
 };
-
 $Rainb.ins = function(txtarea, text, textEnd) {
   var scrollPos = txtarea.scrollTop;
   var strPos = 0;
   textEnd = textEnd || "";
-  var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ?
-    "ff" : (document.selection ? "ie" : false));
+  var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ? "ff" : (document.selection ? "ie" : false));
   if (br == "ie") {
     txtarea.focus();
     var range = document.selection.createRange();
     range.moveStart('character', -txtarea.value.length);
     strPos = range.text.length;
   } else if (br == "ff") strPos = txtarea.selectionStart;
-
   var front = (txtarea.value).substring(0, strPos);
   var selectedText = (txtarea.value).substring(strPos, txtarea.selectionEnd);
   var back = (txtarea.value).substring(txtarea.selectionEnd, txtarea.value.length);
@@ -895,11 +845,9 @@ $Rainb.ins = function(txtarea, text, textEnd) {
   }
   txtarea.scrollTop = scrollPos;
 };
-
 $Rainb.alast = function(arr) {
   return arr[arr.length - 1];
 }
-
 $Rainb.till = function() {
   var selects = [],
     listening = false;
@@ -915,7 +863,6 @@ $Rainb.till = function() {
         }
       }
     };
-
   }
   return function(selector, cb, ctx) {
     ctx = ctx || window;
@@ -934,7 +881,6 @@ $Rainb.till = function() {
     }
   }
 }();
-
 $Rainb.addStyle = function(css, cb) {
   var style = [];
   for (var i = 0, l = css.length; i < l; i++) {
@@ -1026,7 +972,6 @@ $Rainb.addStyle = function(css, cb) {
           $Rainb.off(listener, event, callBack);
           continue;
         }
-
         for (var i = 0, l = events[event].length; i < l; i++) {
           if ((events[event][i].callback == callback || !callback) && (!elementSelector || events[event][i].selector == elementSelector)) {
             events[event].splice(i--, 1);
@@ -1037,10 +982,7 @@ $Rainb.addStyle = function(css, cb) {
       if (!(events[event] && events[event].length)) {
         $Rainb.off(listener, event, callBack);
       }
-
-
     }
-
   }
 
   function callBack(event, callback) {
@@ -1069,7 +1011,6 @@ $Rainb.addStyle = function(css, cb) {
     for (var eventCallback = new EventCallback(callback, elementSelector), _i = 0, _len = _ref.length; _i < _len; _i++) {
       event = _ref[_i];
       var events;
-
       if (!listener.__$Rainb_Events) {
         listener.__$Rainb_Events = {}
       }
@@ -1082,12 +1023,10 @@ $Rainb.addStyle = function(css, cb) {
           events[event] = []
         }
       events[event].push(eventCallback);
-
     }
-    if (!(listener._$Rainb_Event && listener._$Rainb_Event.length))
-      $Rainb.on(listener, listening, function(e) {
-        callBack(e, callback)
-      });
+    if (!(listener._$Rainb_Event && listener._$Rainb_Event.length)) $Rainb.on(listener, listening, function(e) {
+      callBack(e, callback)
+    });
   }
 })()
 $Rainb.HTTPRequestsRetry = function(requests, success, done, extra, headers, timeout, attemptsleft, failure) { //Same shit when basically the caller function is the same
@@ -1137,8 +1076,6 @@ $Rainb.HTTPRequestRetry = function(link, success, extra, headers, attemptsleft, 
   }
   return f;
 };
-
-
 (function() {
   function dragstart(e) {
     var el, isTouching, o, rect, screenHeight, screenWidth, _ref;
@@ -1224,12 +1161,10 @@ $Rainb.HTTPRequestRetry = function(link, success, extra, headers, attemptsleft, 
     }
     //return $.set("" + this.id + ".position", this.style.cssText);
   };
-
   $Rainb.enableDrag = function() {
     $Rainb.setEventListener(document, "touchstart mousedown", dragstart, ".draggable:not(textarea,button,input,a)")
   }
 })();
-
 $Rainb.key = function() {
   this.keys = [];
 }
@@ -1265,7 +1200,6 @@ $Rainb.key.prototype.toggle = function(key) {
 $Rainb.key.prototype.isEmpty = function() {
   return this.keys.length === 0;
 };
-
 /*
  
 Node rainb.
@@ -1288,7 +1222,6 @@ Node rainb.
         for (var i = 0; i < node.classList.length; i++) {
           this.classes.add(node.classList[i])
         }
-
       }
       if (node.attributes)
         for (var i = 0; i < node.attributes.length; i++) {
@@ -1303,7 +1236,6 @@ Node rainb.
     this.attr = attr;
   };
 
-
   function toNode(node) { //returns a custom rainb node
     if (node instanceof Node) {
       return new $Rainb.node(node);
@@ -1315,17 +1247,10 @@ Node rainb.
       if (!((arguments[i].node instanceof $Rainb.node) || (arguments[i].node instanceof Node)) && arguments[i].node) {
         this.childNodes.push(arguments[i]);
         arguments[i].node = toNode(arguments[i].node);
-      } else
-        this.childNodes.push(toNode((type = typeof arguments[i]) === "string" || type === "number" ? $Rainb.tn(arguments[i]) : arguments[i]));
-
+      } else this.childNodes.push(toNode((type = typeof arguments[i]) === "string" || type === "number" ? $Rainb.tn(arguments[i]) : arguments[i]));
     }
-
     return this;
   };
-
-
-
-
   $Rainb.node.prototype.attribute = function(attr, value) {
     this.attr[attr] = value;
     return this;
@@ -1358,7 +1283,6 @@ Node rainb.
         return n.render()
       })
       $Rainb.after(this.node.childNodes[start - 1], args)
-
     }
     return this;
   };
@@ -1377,13 +1301,9 @@ Node rainb.
     this.events.push([eventToListen, callback, selector]);
     return this;
   }
-  $Rainb.node.removeAttr = function(attr) {
-
-  };
+  $Rainb.node.removeAttr = function(attr) {};
   $Rainb.node.prototype.render = function(children) {
-
     this.attribute("class", this.classes.keys.join(' '));
-
     var ret;
     switch (this.nodeType) {
       case 3:
@@ -1409,34 +1329,37 @@ Node rainb.
     return this.node;
   }
 })();
-
 (function() {
   $Rainb.Uilist = function(node) {
     this.listElement = new $Rainb.node(node);
   }
-
 })();
-function followUser(user){
-return new Promise(function(resolve,reject){
-$Rainb.HTTP("https://github.com/"+user, {}, function(lol) {
-    var div = $Rainb.el("div");
-    div.innerHTML = lol.response;
-    var form =div.querySelector(".follow>form");
-    if (form) {
-      
-      //console.log(form[0])
-      $Rainb.HTTP(form.action, {
-        method: form.method,
-        post: new FormData(form)
-      }, function(asdf) {
-        console.log(user + " success follow (I think...)")
-        resolve(true);
-      }, {
-        accept: "application/json"
-      })
-    }else{console.log("%cHello "+user+"! You cannot follow yourself you noob","color:blue");resolve(false)}
-  })})
+
+function followUser(user) {
+  return new Promise(function(resolve, reject) {
+    $Rainb.HTTP("https://github.com/" + user, {}, function(lol) {
+      var div = $Rainb.el("div");
+      div.innerHTML = lol.response;
+      var form = div.querySelector(".follow>form");
+      if (form) {
+        //console.log(form[0])
+        $Rainb.HTTP(form.action, {
+          method: form.method,
+          post: new FormData(form)
+        }, function(asdf) {
+          console.log(user + " success follow (I think...)")
+          resolve(true);
+        }, {
+          accept: "application/json"
+        })
+      } else {
+        console.log("%cHello " + user + "! You cannot follow yourself you noob", "color:blue");
+        resolve(false)
+      }
+    })
+  })
 }
+
 function starRepo(repo) {
   var i = 1;
   var x = Promise.resolve([])
@@ -1459,12 +1382,10 @@ function starRepo(repo) {
             //resolve(val.concat(t))
             resolve(ahh(Promise.resolve(val.concat(t))))
           }
-
         })
       })
     })
   }
-
   return ahh(x).then(function(ohh) {
     var i = 0;
     return new Promise(function(resolve, reject) {
@@ -1502,7 +1423,6 @@ function starForm(repo, next) {
     }
   })
 }
-
 starRepo("users/Kreijstal").then(function() {
   return starRepo("orgs/fossasia")
 }).then(function() {
@@ -1523,6 +1443,6 @@ starRepo("users/Kreijstal").then(function() {
   return followUser("techyay")
 }).then(function() {
   return followUser("edenyay")
-}).then(function(){
-console.log("It's finally over")
+}).then(function() {
+  console.log("It's finally over")
 })
