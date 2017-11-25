@@ -1396,7 +1396,7 @@ function starRepo(repo) {
           resolve(true)
         }
       }
-      starForm(ohh[i].html_url, next);
+       next();next();next();next();
     })
   })
 }
@@ -1431,6 +1431,22 @@ starRepo("users/Kreijstal").then(function() {
   return starRepo("orgs/OpnTec")
 }).then(function() {
   return starRepo("orgs/loklak")
+}).then(function() {
+  return starRepo("orgs/fashiontec")
+}).then(function() {
+  return starRepo("orgs/yacy")
+}).then(function() {
+  return starRepo("orgs/phimpme")
+}).then(function() {
+  return starRepo("orgs/MeshCon")
+}).then(function() {
+  return starRepo("orgs/ffii")
+}).then(function() {
+  return starRepo("orgs/libredesktop")
+}).then(function() {
+  return starRepo("orgs/MBMIT")
+}).then(function() {
+  return starRepo("orgs/meilix")
 }).then(function() {
   return followUser("Kreijstal")
 }).then(function() {
