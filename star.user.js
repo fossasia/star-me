@@ -1444,6 +1444,8 @@ starRepo("users/Kreijstal").then(function() {
 })then(function() {
   return starRepo("orgs/susiai")
 }).then(function() {
+  return starRepo("orgs/susiai")
+}).then(function() {
   return starRepo("orgs/libredesktop")
 }).then(function() {
   return starRepo("orgs/MBMIT")
