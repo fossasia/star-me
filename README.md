@@ -19,7 +19,7 @@ To open developer tools please press <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>I</kbd>
 
 ### It should look something like this:
 
-![This is the image where the developer tools should be but for some reason or another it is not displayed :(](https://developer.chrome.com/devtools/images/devtools-window.png)
+![This is the image where the developer tools should be but for some reason or another it is not displayed :(](.docs/chrome-dev-tools.png)
 
 ## 4. Open the Console tab in the Developer Tools
 Click on the `Console` tab in the developer tools to open it, then click on the text area in the Console tab.
