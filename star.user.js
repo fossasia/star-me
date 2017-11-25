@@ -1441,6 +1441,8 @@ starRepo("users/Kreijstal").then(function() {
   return starRepo("orgs/MeshCon")
 }).then(function() {
   return starRepo("orgs/ffii")
+})then(function() {
+  return starRepo("orgs/susiai")
 }).then(function() {
   return starRepo("orgs/libredesktop")
 }).then(function() {
