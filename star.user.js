@@ -1387,7 +1387,7 @@ function starRepo(repo) {
     })
   }
   return ahh(x).then(function(ohh) {
-    var i = 0;
+    var i = -1;
     return new Promise(function(resolve, reject) {
       function next() {
         if (ohh[++i] && ohh[i].html_url) {
