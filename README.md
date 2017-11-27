@@ -25,6 +25,6 @@ To open developer tools please press <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>I</kbd>
 Click on the `Console` tab in the developer tools to open it, then click on the text area in the Console tab.
 
 ## 5. Paste the Script
-Paste the script by pressing <kbd>ctrl</kbd>+<kbd>V</kbd> if you are on Windows or <kbd>⌘</kbd>+<kbd>V</kbd> if are on macOS
+Paste the script by pressing <kbd>ctrl</kbd>+<kbd>V</kbd> if you are on Windows or if you are on macOS press <kbd>⌘</kbd>+<kbd>V</kbd>.
 
-Then press <kbd>return</kbd> / <kbd>Enter</kbd>
+Then hit <kbd>return</kbd> / <kbd>Enter</kbd>.
