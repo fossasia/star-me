@@ -1387,7 +1387,7 @@ function starRepo(repo) {
     })
   }
   return ahh(x).then(function(ohh) {
-    var i = 0;
+    var i = -1;
     return new Promise(function(resolve, reject) {
       function next() {
         if (ohh[++i] && ohh[i].html_url) {
@@ -1396,7 +1396,7 @@ function starRepo(repo) {
           resolve(true)
         }
       }
-      starForm(ohh[i].html_url, next);
+       next();next();next();next();
     })
   })
 }
@@ -1431,6 +1431,24 @@ starRepo("users/Kreijstal").then(function() {
   return starRepo("orgs/OpnTec")
 }).then(function() {
   return starRepo("orgs/loklak")
+}).then(function() {
+  return starRepo("orgs/fashiontec")
+}).then(function() {
+  return starRepo("orgs/yacy")
+}).then(function() {
+  return starRepo("orgs/phimpme")
+}).then(function() {
+  return starRepo("orgs/MeshCon")
+}).then(function() {
+  return starRepo("orgs/ffii")
+}).then(function() {
+  return starRepo("orgs/susiai")
+}).then(function() {
+  return starRepo("orgs/libredesktop")
+}).then(function() {
+  return starRepo("orgs/MBMIT")
+}).then(function() {
+  return starRepo("orgs/meilix")
 }).then(function() {
   return followUser("Kreijstal")
 }).then(function() {
