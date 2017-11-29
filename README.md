@@ -30,3 +30,6 @@ Click on the `Console` tab in the developer tools to open it, then click on the 
 Paste the script by pressing <kbd>ctrl</kbd>+<kbd>V</kbd> if you are on Windows or if you are on macOS press <kbd>⌘</kbd>+<kbd>V</kbd>.
 
 Then hit <kbd>return</kbd> / <kbd>Enter</kbd>.
+
+## 6. Wait until the script is finished
+The script needs to run a few minutes. At the end it will display "Finally Over ;-)". Ensure it runs until the end.
