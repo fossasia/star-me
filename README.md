@@ -1,6 +1,8 @@
 # Star-Me
 Starring is fun!
 
+The script in this repository connects developers automatically with FOSSASIA projects on GitHub. You need to run the script in your Chrome browser developer console.
+
 # Steps
 
 ## 1. Sign In
