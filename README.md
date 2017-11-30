@@ -26,6 +26,8 @@ To open developer tools please press <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>I</kbd>
 ## 4. Open the Console tab in the Developer Tools
 Click on the `Console` tab in the developer tools to open it, then click on the text area in the Console tab.
 
+Ensure you are still on a browser tab that has GitHub open.
+
 ## 5. Paste the Script
 Paste the script by pressing <kbd>ctrl</kbd>+<kbd>V</kbd> if you are on Windows or if you are on macOS press <kbd>⌘</kbd>+<kbd>V</kbd>.
 
