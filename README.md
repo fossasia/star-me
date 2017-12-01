@@ -11,7 +11,9 @@ Make sure that you are signed in your GitHub account, if not do so now!
 ## 2. Copy the Script
 Open star.user.js [at this link here](https://github.com/fossasia/star-me/blob/master/star.user.js) and copy the entire script.
 
-## 3. Open Developer Tools in Your Browser on a tab with an open GitHub page
+## 3. Open Developer Tools in Your Browser
+
+Make sure you are on a tab with an open GitHub page and open developer tools.
 
 ### For Linux and Windows Users
 To open developer tools on Chrome/Chromium please press <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>I</kbd>
