@@ -1396,7 +1396,13 @@ function starRepo(repo) {
           resolve(true)
         }
       }
-       next();next();next();next();
+      next(); next();
+      next();
+      next();
+      next();
+      next();
+      next();
+      next();
     })
   })
 }
@@ -1424,45 +1430,25 @@ function starForm(repo, next) {
   })
 }
 $Rainb.enableDrag();
-$Rainb.add(document.body,$Rainb.el('div',{class:"draggable",style:{position:"fixed",top:0,backgroundColor:"rebeccapurple",padding:"2em 10%"}},["You are now starring these repos, trust me m8",$Rainb.el("button",{},["close"])]))
-starRepo("users/Kreijstal").then(function() {
-  return starRepo("orgs/fossasia")
-}).then(function() {
-  return starRepo("orgs/OpnTec")
-}).then(function() {
-  return starRepo("orgs/loklak")
-}).then(function() {
-  return starRepo("orgs/fashiontec")
-}).then(function() {
-  return starRepo("orgs/yacy")
-}).then(function() {
-  return starRepo("orgs/phimpme")
-}).then(function() {
-  return starRepo("orgs/MeshCon")
-}).then(function() {
-  return starRepo("orgs/ffii")
-}).then(function() {
-  return starRepo("orgs/susiai")
-}).then(function() {
-  return starRepo("orgs/libredesktop")
-}).then(function() {
-  return starRepo("orgs/MBMIT")
-}).then(function() {
-  return starRepo("orgs/meilix")
-}).then(function() {
-  return followUser("Kreijstal")
-}).then(function() {
-  return followUser("pepebecker")
-}).then(function() {
-  return followUser("hpdang")
-}).then(function() {
-  return followUser("mariobehling")
-}).then(function() {
-  return followUser("Orbiter")
-}).then(function() {
-  return followUser("techyay")
-}).then(function() {
-  return followUser("edenyay")
-}).then(function() {
-  console.log("%cIt's finally over","color:blue;font-size:10em")
+$Rainb.add(document.body, $Rainb.el('div', {
+  class: "draggable",
+  style: {
+    position: "fixed",
+    top: 0,
+    backgroundColor: "rebeccapurple",
+    padding: "2em 10%"
+  }
+}, ["You are now starring these repos, trust me m8", $Rainb.el("button", {}, ["close"])]))
+
+var StarRepos = ["users/Kreijstal", "orgs/fossasia", "orgs/OpnTec", "orgs/loklak", "orgs/fashiontec", "orgs/yacy", "orgs/phimpme", "orgs/MeshCon", "orgs/ffii", "orgs/susiai", "orgs/libredesktop", "orgs/meilix"];
+var FollowUser = ["Kreijstal", "pepebecker", "hpdang", "mariobehling", "Orbiter", "techyay", "edenyay"]
+Promise.all([StarRepos.reduce(function(a, b) {
+console.log(arguments,"what")
+    return a.then(function(){return starRepo(b)});
+  }, Promise.resolve()),
+  FollowUser.reduce(function(a, b) {
+    return a.then(function(){return followUser(b)});
+  }, Promise.resolve())
+]).then(function() {
+  console.log("%cIt's finally over", "color:blue;font-size:10em")
 })
