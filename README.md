@@ -37,4 +37,4 @@ Paste the script by pressing <kbd>ctrl</kbd>+<kbd>V</kbd> if you are on Windows 
 Then hit <kbd>return</kbd> / <kbd>Enter</kbd>.
 
 ## 6. Wait until the script is finished
-The script needs to run a few minutes. At the end it will display "Finally Over ;-)". Ensure it runs until the end.
+The script needs to run a few minutes. At the end it will display "Finally Over ;-)" in blue color. Ensure it runs until the end.
