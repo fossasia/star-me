@@ -39,7 +39,7 @@ Then hit <kbd>return</kbd> / <kbd>Enter</kbd>.
 ## 6. Wait until the script is finished
 The script needs to run a few minutes. At the end it will display "Finally Over ;-)" in blue color. Ensure it runs until the end.
 
-## 7.Starring is done.Go start contributing
+## 7.Starring is done. Go start contributing
 Once starring is finished, you can find starred repositories in your github handle.Choose project of your interest and start contributing.
 You will also receive updates regarding repositories.
 
