@@ -1440,8 +1440,8 @@ $Rainb.add(document.body, $Rainb.el('div', {
   }
 }, ["You are now starring these repos, trust me m8", $Rainb.el("button", {}, ["close"])]))
 
-var StarRepos = ["orgs/fossasia", "orgs/voicerepublic", "orgs/OpnTec"];
-var FollowUser = ["mariobehling", "hpdang", "iamareebjamal", "norbusan", "CloudyPadmal", "bessman"]
+var StarRepos = ["orgs/fossasia", "orgs/OpnTec"];
+var FollowUser = ["mariobehling", "hpdang", "marcoag", "norbusan", "CloudyPadmal", "bessman", "cweitat", "adityastic"]
 Promise.all([StarRepos.reduce(function(a, b) {
 
     return a.then(function(){return starRepo(b)});
