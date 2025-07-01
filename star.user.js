@@ -1335,30 +1335,54 @@ Node rainb.
   }
 })();
 
-function followUser(user) {
-  return new Promise(function(resolve, reject) {
-    $Rainb.HTTP("https://github.com/" + user, {}, function(lol) {
-      var div = $Rainb.el("div");
-      div.innerHTML = lol.response;
-      var form = div.querySelector(".follow>form");
-      if (form) {
-        //console.log(form[0])
-        $Rainb.HTTP(form.action, {
-          method: form.method,
-          post: new FormData(form)
-        }, function(asdf) {
-          console.log(user + " success follow (I think...)")
-          resolve(true);
-        }, {
-          accept: "application/json"
-        })
-      } else {
-        console.log("%cHello " + user + "! You cannot follow yourself you noob", "color:blue");
-        resolve(false)
+//   older version of followUser - 
+
+// function followUser(user) {
+//   return new Promise(function(resolve, reject) {
+//     $Rainb.HTTP("https://github.com/" + user, {}, function(lol) {
+//       var div = $Rainb.el("div");
+//       div.innerHTML = lol.response;
+//       var form = div.querySelector(".follow>form");
+//       if (form) {
+//         //console.log(form[0])
+//         $Rainb.HTTP(form.action, {
+//           method: form.method,
+//           post: new FormData(form)
+//         }, function(asdf) {
+//           console.log(user + " success follow (I think...)")
+//           resolve(true);
+//         }, {
+//           accept: "application/json"
+//         })
+//       } else {
+//         console.log("%cHello " + user + "! You cannot follow yourself you noob", "color:blue");
+//         resolve(false)
+//       }
+//     })
+//   })
+// }
+
+//created a new follow function -
+
+function followGitHubAccount(username, token) {
+    return fetch(`https://api.github.com/user/following/${username}`, {
+      method: "PUT",
+      headers: {
+        "Authorization": `token ${token}`,
+        "Accept": "application/vnd.github.v3+json"
       }
-    })
-  })
-}
+    }).then(res => {
+      if (res.status === 204) {
+        console.log(`✅ Followed ${username}`);
+      } else if (res.status === 404) {
+        console.warn(`❌ Could not follow ${username}. Are you sure the token has 'user:follow' scope?`);
+      } else {
+        console.warn(`⚠️ Unexpected status ${res.status} for ${username}`);
+      }
+    }).catch(err => {
+      console.error(`Error following ${username}`, err);
+    });
+  }
 
 function starRepo(repo) {
   var i = 1;
@@ -1440,15 +1464,32 @@ $Rainb.add(document.body, $Rainb.el('div', {
   }
 }, ["You are now starring these repos, trust me m8", $Rainb.el("button", {}, ["close"])]))
 
-var StarRepos = ["orgs/fossasia", "orgs/OpnTec"];
-var FollowUser = ["mariobehling", "hpdang", "marcoag", "norbusan", "CloudyPadmal", "bessman", "cweitat", "adityastic"]
-Promise.all([StarRepos.reduce(function(a, b) {
+  var StarRepos = ["orgs/fossasia", "orgs/OpnTec"];
+  const GitHubAccountsToFollow = [
+    "fossasia", "OpnTec"
+  ];
 
-    return a.then(function(){return starRepo(b)});
-  }, Promise.resolve()),
-  FollowUser.reduce(function(a, b) {
-    return a.then(function(){return followUser(b)});
-  }, Promise.resolve())
-]).then(function() {
-  console.log("%cIt's finally over", "color:blue;font-size:10em")
-})
+  console.log(
+    `To generate a GitHub Personal Access Token:
+    1. Visit: https://github.com/settings/tokens
+    2. Click "Generate new token" > Classic
+    3. Set a name like "Follow Script"
+    4. Check ONLY the box for 'user:follow'
+    5. Generate the token and copy it
+    6. Paste it into the prompt`
+    );
+
+  const token = prompt(
+    "Enter your GitHub personal access token (with 'user:follow' scope).\n\nIf you don't have one, check the browser console for step-by-step instructions."
+  );
+
+  Promise.all([StarRepos.reduce(function(a, b) {
+  
+      return a.then(function(){return starRepo(b)});
+    }, Promise.resolve()),
+    GitHubAccountsToFollow.reduce(function(p, user) {
+      return p.then(function(){return followGitHubAccount(user, token)});
+    }, Promise.resolve())
+  ]).then(function() {
+    console.log("%cIt's finally over", "color:blue;font-size:10em")
+  })
