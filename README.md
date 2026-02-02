@@ -1,45 +1,100 @@
-# Star-Me
-Starring is fun!
+# Star Me
 
-The script in this repository connects developers automatically with FOSSASIA projects on GitHub. You need to run the script in your Chrome browser developer console.
+Starring is fun and following open source projects even more so.
 
-# Steps
+Star Me is a small browser based script that helps developers quickly connect with FOSSASIA projects on GitHub.
+By running the script in your browser console while logged into GitHub, you can automatically star repositories and stay up to date with project activity.
 
-## 1. Sign In
-Make sure that you are signed in your GitHub account, if not do so now!
+This tool is primarily intended for onboarding, workshops, and community engagement. No GitHub token or API access is required.
 
-## 2. Copy the Script
-Open star.user.js [at this link here](https://github.com/fossasia/star-me/blob/master/star.user.js) and copy the entire script.
+## What does this script do
 
-## 3. Open Developer Tools in Your Browser
+* Automatically stars FOSSASIA repositories on GitHub
+* Runs entirely in your browser while you are logged in
+* Does not require any installation, extensions, or authentication tokens
+* Helps you discover projects and receive updates more easily
 
-Make sure you are on a tab with an open GitHub page and open developer tools.
+## Requirements
 
-### For Linux and Windows Users
-To open developer tools on Chrome/Chromium please press <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>I</kbd>
+• A GitHub account
+• You must be signed in to GitHub
+• A modern browser such as Chrome or Chromium
+• JavaScript enabled
 
-### For macOS Users using Chrome/Chromium
-To open developer tools please press <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>I</kbd>
+## Steps
 
+## 1. Sign in to GitHub
 
-### It should look something like this:
+Make sure you are logged in to your GitHub account before proceeding.
+
+## 2. Copy the script
+
+Open the file `star.user.js` from the repository and copy the entire script content.
+
+## 3. Open Developer Tools in your browser
+
+Make sure you are on a tab with an open GitHub page.
+
+### Linux and Windows
+
+Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>I</kbd>
+
+### macOS
+
+Press <kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>I</kbd>
+
+### Expected view
+
+The Developer Tools window should open, similar to the screenshot below.
 
 ![This is the image where the developer tools should be but for some reason or another it is not displayed :(](./docs/chrome-dev-tools.png)
 
-## 4. Open the Console tab in the Developer Tools
-Click on the `Console` tab in the developer tools to open it, then click on the text area in the Console tab.
+## 4. Open the Console tab
 
-Ensure you are still on a browser tab that has GitHub open.
+In the Developer Tools, switch to the `Console` tab and click inside the input area.
 
-## 5. Paste the Script
-Paste the script by pressing <kbd>ctrl</kbd>+<kbd>V</kbd> if you are on Windows or if you are on macOS press <kbd>⌘</kbd>+<kbd>V</kbd>.
+Ensure that the active browser tab is still a GitHub page.
 
-Then hit <kbd>return</kbd> / <kbd>Enter</kbd>.
+## 5. Paste and run the script
 
-## 6. Wait until the script is finished
-The script needs to run a few minutes. At the end it will display "Finally Over ;-)" in blue color. Ensure it runs until the end.
+Paste the script into the Console.
 
-## 7.Starring is done. Go start contributing
-Once starring is finished, you can find starred repositories in your github handle.Choose project of your interest and start contributing.
-You will also receive updates regarding repositories.
+• Windows or Linux: <kbd>Ctrl</kbd> + <kbd>V</kbd>
+• macOS: <kbd>⌘</kbd> + <kbd>V</kbd>
 
+Then press <kbd>Enter</kbd>.
+
+## 6. Wait for completion
+
+The script will run for a few minutes depending on the number of repositories.
+
+When finished, it prints
+“Finally Over ;-)”
+in blue color.
+
+Please allow the script to run until completion.
+
+## 7. Done. Start contributing
+
+Once finished, the repositories will appear in your starred list on GitHub.
+
+You can now
+* Explore projects that match your interests
+* Receive updates and notifications
+* Start contributing to FOSSASIA open source projects
+
+## Safety note
+
+You are running this script manually in your browser console.
+Only execute scripts that you understand and trust.
+
+This script only interacts with GitHub pages you are currently logged into and does not send data elsewhere.
+
+## Future improvements
+
+Planned or proposed improvements include
+* Option to star only a selected list of repositories
+* Option to follow the organization itself
+* Clear configuration section inside the script
+
+Contributions and suggestions are welcome.
