@@ -1451,7 +1451,11 @@ function followOrg(org) {
   return new Promise(function(resolve, reject) {
     $Rainb.HTTP("https://github.com/" + org, {}, function(lol) {
       var div = $Rainb.el("div");
-      div.innerHTML = lol.response;
+      var div = $Rainb.el("div");
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(lol.response, "text/html");
+      div.appendChild(doc.body.firstChild);
+
       var form = div.querySelector("form[action*='/follow']"); 
       
       if (form) {
