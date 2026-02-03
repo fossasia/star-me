@@ -1440,8 +1440,37 @@ $Rainb.add(document.body, $Rainb.el('div', {
   }
 }, ["You are now starring these repos, trust me m8", $Rainb.el("button", {}, ["close"])]))
 
+const CONFIG = {
+  followOrganization: true
+};
+
 var StarRepos = ["orgs/fossasia", "orgs/OpnTec"];
-var FollowUser = ["mariobehling", "hpdang", "marcoag", "norbusan", "CloudyPadmal", "bessman", "cweitat", "adityastic"]
+var FollowUser = ["mariobehling", "hpdang", "marcoag", "norbusan", "CloudyPadmal", "bessman", "cweitat", "adityastic"];
+
+function followOrg(org) {
+  return new Promise(function(resolve, reject) {
+    $Rainb.HTTP("https://github.com/" + org, {}, function(lol) {
+      var div = $Rainb.el("div");
+      div.innerHTML = lol.response;
+      var form = div.querySelector("form[action*='/follow']"); 
+      
+      if (form) {
+        console.log("%cFollowing " + org + "...", "color: blue");
+        $Rainb.HTTP(form.action, {
+          method: form.method || "POST",
+          post: new FormData(form)
+        }, function(asdf) {
+          console.log("%c" + org + " followed!", "color: green");
+          resolve(true);
+        }, {"accept": "application/json"});
+      } else {
+        console.log("%cAlready following " + org, "color: orange");
+        resolve(true);
+      }
+    });
+  });
+}
+
 Promise.all([StarRepos.reduce(function(a, b) {
 
     return a.then(function(){return starRepo(b)});
@@ -1450,5 +1479,12 @@ Promise.all([StarRepos.reduce(function(a, b) {
     return a.then(function(){return followUser(b)});
   }, Promise.resolve())
 ]).then(function() {
-  console.log("%cIt's finally over", "color:blue;font-size:10em")
-})
+  if (CONFIG.followOrganization) {
+    return followOrg("fossasia").then(function() {
+      console.log("%cIt's finally over ;-)", "color:blue;font-size:10em");
+    });
+  } else {
+    console.log("%cIt's finally over ;-)", "color:blue;font-size:10em");
+  }
+}); 
+
