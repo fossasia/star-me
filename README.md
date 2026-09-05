@@ -10,6 +10,7 @@ This tool is primarily intended for onboarding, workshops, and community engagem
 ## What does this script do
 
 * Automatically stars FOSSASIA repositories on GitHub
+* Follows configured GitHub organizations (FOSSASIA by default)
 * Runs entirely in your browser while you are logged in
 * Does not require any installation, extensions, or authentication tokens
 * Helps you discover projects and receive updates more easily
@@ -20,6 +21,19 @@ This tool is primarily intended for onboarding, workshops, and community engagem
 • You must be signed in to GitHub
 • A modern browser such as Chrome or Chromium
 • JavaScript enabled
+
+## Configuration
+
+Organization following is enabled by default near the bottom of `star.user.js`:
+
+```js
+var CONFIG = {
+  followOrganizations: true,
+  organizationsToFollow: ["fossasia"]
+};
+```
+
+Set `followOrganizations` to `false` to disable organization following. Add or remove organization names in `organizationsToFollow` to choose which organizations the script follows.
 
 ## Steps
 
@@ -76,7 +90,7 @@ Please allow the script to run until completion.
 
 ## 7. Done. Start contributing
 
-Once finished, the repositories will appear in your starred list on GitHub.
+Once finished, the repositories will appear in your starred list on GitHub. When organization following is enabled, the configured organizations will also be followed.
 
 You can now
 * Explore projects that match your interests
@@ -94,7 +108,5 @@ This script only interacts with GitHub pages you are currently logged into and d
 
 Planned or proposed improvements include
 * Option to star only a selected list of repositories
-* Option to follow the organization itself
-* Clear configuration section inside the script
 
 Contributions and suggestions are welcome.

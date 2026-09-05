@@ -1440,8 +1440,68 @@ $Rainb.add(document.body, $Rainb.el('div', {
   }
 }, ["You are now starring these repos, trust me m8", $Rainb.el("button", {}, ["close"])]))
 
+var CONFIG = {
+  followOrganizations: true,
+  organizationsToFollow: ["fossasia"]
+};
+
 var StarRepos = ["orgs/fossasia", "orgs/OpnTec"];
 var FollowUser = ["mariobehling", "hpdang", "marcoag", "norbusan", "CloudyPadmal", "bessman", "cweitat", "adityastic"]
+
+function isSuccessfulResponse(response) {
+  return response.status >= 200 && response.status < 300;
+}
+
+function followOrganization(organization) {
+  var profileUrl = "https://github.com/" + organization;
+
+  return new Promise(function(resolve, reject) {
+    $Rainb.HTTP(profileUrl, {}, function(profileResponse) {
+      if (!isSuccessfulResponse(profileResponse)) {
+        reject(new Error("Could not load the " + organization + " organization page (HTTP " + profileResponse.status + ")."));
+        return;
+      }
+
+      var doc = new DOMParser().parseFromString(profileResponse.response, "text/html");
+      var followForm = doc.querySelector("form[action*='/follow']");
+      var unfollowForm = doc.querySelector("form[action*='/unfollow']");
+
+      if (!followForm) {
+        if (unfollowForm) {
+          console.log("%cAlready following " + organization, "color: orange");
+          resolve(false);
+          return;
+        }
+
+        reject(new Error("Could not find a follow control for " + organization + "."));
+        return;
+      }
+
+      var action = followForm.getAttribute("action");
+      if (!action) {
+        reject(new Error("The follow control for " + organization + " has no action."));
+        return;
+      }
+
+      console.log("%cFollowing " + organization + "...", "color: blue");
+      $Rainb.HTTP(new URL(action, profileUrl).href, {
+        method: followForm.getAttribute("method") || "POST",
+        post: new FormData(followForm)
+      }, function(followResponse) {
+        if (!isSuccessfulResponse(followResponse)) {
+          reject(new Error("Could not follow " + organization + " (HTTP " + followResponse.status + ")."));
+          return;
+        }
+
+        console.log("%c" + organization + " followed!", "color: green");
+        resolve(true);
+      }, {
+        accept: "application/json"
+      });
+    });
+  });
+}
+
 Promise.all([StarRepos.reduce(function(a, b) {
 
     return a.then(function(){return starRepo(b)});
@@ -1450,5 +1510,17 @@ Promise.all([StarRepos.reduce(function(a, b) {
     return a.then(function(){return followUser(b)});
   }, Promise.resolve())
 ]).then(function() {
+  if (!CONFIG.followOrganizations) {
+    return true;
+  }
+
+  return CONFIG.organizationsToFollow.reduce(function(promise, organization) {
+    return promise.then(function() {
+      return followOrganization(organization);
+    });
+  }, Promise.resolve());
+}).then(function() {
   console.log("%cIt's finally over", "color:blue;font-size:10em")
+}).catch(function(error) {
+  console.error("%c" + error.message, "color:red")
 })
