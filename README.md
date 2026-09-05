@@ -3,7 +3,7 @@
 Starring is fun and following open source projects even more so.
 
 Star Me is a small browser based script that helps developers quickly connect with FOSSASIA projects on GitHub.
-By running the script in your browser console while logged into GitHub, you can automatically star repositories and stay up to date with project activity.
+By running the script in your browser console while logged into GitHub, you can automatically star FOSSASIA repositories so GitHub can surface relevant project activity in your home feed.
 
 This tool is primarily intended for onboarding, workshops, and community engagement. No GitHub token or API access is required.
 
@@ -12,7 +12,7 @@ This tool is primarily intended for onboarding, workshops, and community engagem
 * Automatically stars FOSSASIA repositories on GitHub
 * Runs entirely in your browser while you are logged in
 * Does not require any installation, extensions, or authentication tokens
-* Helps you discover projects and receive updates more easily
+* Helps you discover FOSSASIA projects and relevant activity
 
 ## Requirements
 
@@ -69,8 +69,8 @@ Then press <kbd>Enter</kbd>.
 The script will run for a few minutes depending on the number of repositories.
 
 When finished, it prints
-“Finally Over ;-)”
-in blue color.
+“FOSSASIA repositories are now starred.”
+in blue.
 
 Please allow the script to run until completion.
 
@@ -80,7 +80,7 @@ Once finished, the repositories will appear in your starred list on GitHub.
 
 You can now
 * Explore projects that match your interests
-* Receive updates and notifications
+* See relevant FOSSASIA activity in your GitHub home feed
 * Start contributing to FOSSASIA open source projects
 
 ## Safety note
