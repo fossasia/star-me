@@ -1335,31 +1335,6 @@ Node rainb.
   }
 })();
 
-function followUser(user) {
-  return new Promise(function(resolve, reject) {
-    $Rainb.HTTP("https://github.com/" + user, {}, function(lol) {
-      var div = $Rainb.el("div");
-      div.innerHTML = lol.response;
-      var form = div.querySelector(".follow>form");
-      if (form) {
-        //console.log(form[0])
-        $Rainb.HTTP(form.action, {
-          method: form.method,
-          post: new FormData(form)
-        }, function(asdf) {
-          console.log(user + " success follow (I think...)")
-          resolve(true);
-        }, {
-          accept: "application/json"
-        })
-      } else {
-        console.log("%cHello " + user + "! You cannot follow yourself you noob", "color:blue");
-        resolve(false)
-      }
-    })
-  })
-}
-
 function starRepo(repo) {
   var i = 1;
   var x = Promise.resolve([])
@@ -1438,17 +1413,14 @@ $Rainb.add(document.body, $Rainb.el('div', {
     backgroundColor: "rebeccapurple",
     padding: "2em 10%"
   }
-}, ["You are now starring these repos, trust me m8", $Rainb.el("button", {}, ["close"])]))
+}, ["You are now starring FOSSASIA repositories.", $Rainb.el("button", {}, ["close"])]))
 
-var StarRepos = ["orgs/fossasia", "orgs/OpnTec"];
-var FollowUser = ["mariobehling", "hpdang", "marcoag", "norbusan", "CloudyPadmal", "bessman", "cweitat", "adityastic"]
-Promise.all([StarRepos.reduce(function(a, b) {
+var StarRepos = ["orgs/fossasia"];
 
-    return a.then(function(){return starRepo(b)});
-  }, Promise.resolve()),
-  FollowUser.reduce(function(a, b) {
-    return a.then(function(){return followUser(b)});
-  }, Promise.resolve())
-]).then(function() {
-  console.log("%cIt's finally over", "color:blue;font-size:10em")
-})
+StarRepos.reduce(function(sequence, repo) {
+  return sequence.then(function() {
+    return starRepo(repo);
+  });
+}, Promise.resolve()).then(function() {
+  console.log("%cFOSSASIA repositories are now starred.", "color:blue;font-size:4em");
+});
