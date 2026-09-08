@@ -1444,13 +1444,13 @@ function starRepo(repo) {
              }
            }
            console.error("API Rate limit hit! Wait an hour or provide a token.");
-           return resolve(true);
+           return reject(new Error("GitHub API Rate limit hit."));
         }
         
         if (asdf.status !== 200) {
            console.error("Failed to fetch repositories from GitHub API. HTTP Status: " + asdf.status);
            console.error("Response: " + asdf.response);
-           return resolve(true);
+           return reject(new Error("Failed to fetch repositories (HTTP " + asdf.status + ")."));
         }
         
         var ohh;
@@ -1524,18 +1524,20 @@ function starForm(repoUrl, next) {
         });
 
         if (unstarButton) {
-          window.updateStarMeStatus("Already starred: " + repoUrl.split("/").pop());
+          if (win.clickAttempted) {
+            window.updateStarMeStatus("⭐ Starred: " + repoUrl.split("/").pop());
+          } else {
+            window.updateStarMeStatus("Already starred: " + repoUrl.split("/").pop());
+          }
           clearInterval(checkReady);
           win.close();
           setTimeout(next, 500);
         } else if (starButton) {
-          starButton.click();
-          window.updateStarMeStatus("⭐ Starred: " + repoUrl.split("/").pop());
-          clearInterval(checkReady);
-          setTimeout(function() {
-            win.close();
-            setTimeout(next, 500);
-          }, 1000); // wait for click request to finish
+          if (!win.clickAttempted) {
+            starButton.click();
+            win.clickAttempted = true;
+            window.updateStarMeStatus("⏳ Clicking star for " + repoUrl.split("/").pop() + "...");
+          }
         }
       }
     } catch (e) {
@@ -1679,5 +1681,6 @@ Promise.all([StarRepos.reduce(function(a, b) {
   window.updateStarMeStatus("✅ All done! You can safely close this banner.");
   console.log("%cIt's finally over", "color:blue;font-size:10em");
 }).catch(function(error) {
-  console.error("%c" + error.message, "color:red")
+  window.updateStarMeStatus("❌ Error: " + error.message);
+  console.error("%c" + error.message, "color:red");
 })
