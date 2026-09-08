@@ -1458,7 +1458,7 @@ function starRepo(repo) {
         }
         if (!Array.isArray(ohh)) ohh = [];
         
-        console.log("Successfully fetched " + ohh.length + " recently pushed repositories.");
+        window.updateStarMeStatus("Successfully fetched " + ohh.length + " recently pushed repositories.");
         
         var i = -1;
         function next() {
@@ -1516,13 +1516,13 @@ function starForm(repoUrl, next) {
         });
 
         if (unstarButton) {
-          console.log(repoUrl + " is already starred");
+          window.updateStarMeStatus("Already starred: " + repoUrl.split("/").pop());
           clearInterval(checkReady);
           win.close();
           setTimeout(next, 500);
         } else if (starButton) {
           starButton.click();
-          console.log(repoUrl + " success starred (clicked)");
+          window.updateStarMeStatus("⭐ Starred: " + repoUrl.split("/").pop());
           clearInterval(checkReady);
           setTimeout(function() {
             win.close();
@@ -1535,16 +1535,58 @@ function starForm(repoUrl, next) {
     }
   }, 500);
 }
-$Rainb.enableDrag();
-$Rainb.add(document.body, $Rainb.el('div', {
-  class: "draggable",
-  style: {
-    position: "fixed",
-    top: 0,
-    backgroundColor: "rebeccapurple",
-    padding: "2em 10%"
-  }
-}, ["You are now starring these repos, trust me m8", $Rainb.el("button", {}, ["close"])]))
+var uiBanner = document.createElement("div");
+uiBanner.id = "star-me-banner";
+uiBanner.style.position = "fixed";
+uiBanner.style.bottom = "20px";
+uiBanner.style.right = "20px";
+uiBanner.style.backgroundColor = "#24292e";
+uiBanner.style.color = "#ffffff";
+uiBanner.style.padding = "16px";
+uiBanner.style.borderRadius = "6px";
+uiBanner.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+uiBanner.style.zIndex = "999999";
+uiBanner.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+uiBanner.style.maxWidth = "300px";
+uiBanner.style.border = "1px solid #444d56";
+
+var uiTitle = document.createElement("div");
+uiTitle.style.fontWeight = "bold";
+uiTitle.style.marginBottom = "8px";
+uiTitle.style.fontSize = "14px";
+uiTitle.innerText = "⭐ Star Me Script";
+
+var uiStatusText = document.createElement("div");
+uiStatusText.id = "star-me-status";
+uiStatusText.innerText = "Initializing...";
+uiStatusText.style.fontSize = "13px";
+uiStatusText.style.marginBottom = "12px";
+uiStatusText.style.color = "#d1d5da";
+
+var uiCloseBtn = document.createElement("button");
+uiCloseBtn.innerText = "Close";
+uiCloseBtn.style.padding = "4px 12px";
+uiCloseBtn.style.backgroundColor = "#fafbfc";
+uiCloseBtn.style.color = "#24292e";
+uiCloseBtn.style.border = "1px solid rgba(27,31,35,0.15)";
+uiCloseBtn.style.borderRadius = "4px";
+uiCloseBtn.style.cursor = "pointer";
+uiCloseBtn.style.fontSize = "12px";
+uiCloseBtn.style.fontWeight = "bold";
+uiCloseBtn.onclick = function() {
+    uiBanner.remove();
+};
+
+uiBanner.appendChild(uiTitle);
+uiBanner.appendChild(uiStatusText);
+uiBanner.appendChild(uiCloseBtn);
+document.body.appendChild(uiBanner);
+
+window.updateStarMeStatus = function(msg) {
+  var el = document.getElementById("star-me-status");
+  if (el) el.innerText = msg;
+  console.log(msg);
+};
 
 var CONFIG = {
   followOrganizations: true,
@@ -1626,7 +1668,8 @@ Promise.all([StarRepos.reduce(function(a, b) {
     });
   }, Promise.resolve());
 }).then(function() {
-  console.log("%cIt's finally over", "color:blue;font-size:10em")
+  window.updateStarMeStatus("✅ All done! You can safely close this banner.");
+  console.log("%cIt's finally over", "color:blue;font-size:10em");
 }).catch(function(error) {
   console.error("%c" + error.message, "color:red")
 })
