@@ -15,6 +15,9 @@ function getUserData(user) {
 }
 
 function getParticipants(nameFromHackathon, i) {
+    if (!/^[a-z0-9-]{1,63}$/i.test(nameFromHackathon)) {
+        return Promise.reject(new Error("Invalid hackathon name"));
+    }
     return fetch("https://" + nameFromHackathon + ".devpost.com/participants?page=" + i, {
         headers: {
             Accept: "text/html, */*; q=0.01",
