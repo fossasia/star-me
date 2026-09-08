@@ -1337,97 +1337,175 @@ Node rainb.
 
 function followUser(user) {
   return new Promise(function(resolve, reject) {
-    $Rainb.HTTP("https://github.com/" + user, {}, function(lol) {
-      var div = $Rainb.el("div");
-      div.innerHTML = lol.response;
-      var form = div.querySelector(".follow>form");
-      if (form) {
-        //console.log(form[0])
-        $Rainb.HTTP(form.action, {
-          method: form.method,
-          post: new FormData(form)
-        }, function(asdf) {
-          console.log(user + " success follow (I think...)")
+    var profileUrl = "https://github.com/" + user;
+    $Rainb.HTTP(profileUrl, {}, function(lol) {
+      var doc = new DOMParser().parseFromString(lol.response, "text/html");
+      
+      var isFollowing = lol.response.indexOf('action="/users/unfollow"') !== -1 || lol.response.indexOf('"viewerIsFollowing":true') !== -1;
+      if (isFollowing) {
+        console.log(user + " is already followed");
+        return resolve(true);
+      }
+      
+      var followForm = null;
+      var csrfToken = null;
+      var postUrl = "/users/follow?target=" + user;
+      
+      var forms = Array.prototype.slice.call(doc.querySelectorAll("form"));
+      for (var i = 0; i < forms.length; i++) {
+        var action = forms[i].getAttribute("action");
+        if (action && action.indexOf("/follow") !== -1 && action.indexOf("/unfollow") === -1) {
+          followForm = forms[i];
+          break;
+        }
+      }
+      
+      if (!followForm) {
+        var scripts = doc.querySelectorAll('script[type="application/json"]');
+        for (var s = 0; s < scripts.length; s++) {
+          try {
+            var data = JSON.parse(scripts[s].textContent);
+            var tokens = data.payload && data.payload.csrf_tokens;
+            if (tokens) {
+              for (var path in tokens) {
+                if (path.indexOf("/follow") !== -1 && path.indexOf("/unfollow") === -1) {
+                  csrfToken = tokens[path].post;
+                  postUrl = path;
+                  break;
+                }
+              }
+            }
+          } catch(e) {}
+          if (csrfToken) break;
+        }
+      }
+      
+      if (!followForm && !csrfToken) {
+         var anyTokenInput = doc.querySelector('input[name="authenticity_token"]');
+         if (anyTokenInput) csrfToken = anyTokenInput.value;
+      }
+      
+      if (followForm) {
+        var actionUrl = followForm.getAttribute("action") || followForm.action;
+        $Rainb.HTTP(new URL(actionUrl, profileUrl).href, {
+          method: followForm.getAttribute("method") || "POST",
+          post: new FormData(followForm)
+        }, function() {
+          console.log(user + " success follow (form)");
           resolve(true);
-        }, {
-          accept: "application/json"
-        })
+        }, { accept: "application/json" });
+      } else if (csrfToken) {
+        var fd = new FormData();
+        fd.append("authenticity_token", csrfToken);
+        $Rainb.HTTP(new URL(postUrl, profileUrl).href, {
+          method: "POST",
+          post: fd
+        }, function() {
+          console.log(user + " success follow (token)");
+          resolve(true);
+        }, { accept: "application/json" });
       } else {
         console.log("%cHello " + user + "! You cannot follow yourself you noob", "color:blue");
-        resolve(false)
+        resolve(false);
       }
-    })
-  })
+    });
+  });
 }
 
 function starRepo(repo) {
-  var i = 1;
-  var x = Promise.resolve([])
-
-  function getNext(x, callback) {
-    $Rainb.HTTP("https://api.github.com/" + repo + "/repos?per_page=2000&page=" + x, {}, function(asdf) {
-      callback(JSON.parse(asdf.response))
-    })
-  }
-
-  function ahh(x) {
-    return x.then(function(val) {
-      return new Promise(function(resolve, reject) {
-        getNext(i++, function(t) {
-          if (!t.length) {
-            //END
-            resolve(val);
-          } else {
-            //KEEP GOING
-            //resolve(val.concat(t))
-            resolve(ahh(Promise.resolve(val.concat(t))))
-          }
-        })
-      })
-    })
-  }
-  return ahh(x).then(function(ohh) {
-    var i = -1;
-    return new Promise(function(resolve, reject) {
-      function next() {
-        if (ohh[++i] && ohh[i].html_url) {
-          starForm(ohh[i].html_url, next)
-        } else {
-          resolve(true)
+  return new Promise(function(resolve, reject) {
+    function fetchRepos(token) {
+      var headers = {};
+      if (token) headers["Authorization"] = "token " + token;
+      
+      $Rainb.HTTP("https://api.github.com/" + repo + "/repos?sort=pushed&direction=desc&per_page=50&page=1", {}, function(asdf) {
+        if (asdf.status === 403) {
+           var userToken = prompt("You hit the GitHub API rate limit (60 requests/hr).\nTo continue testing, please paste a Personal Access Token here:");
+           if (userToken) {
+             return fetchRepos(userToken.trim());
+           } else {
+             console.error("API Rate limit hit! Wait an hour or provide a token.");
+             return resolve(true);
+           }
         }
-      }
-      next(); next();
-      next();
-      next();
-      next();
-      next();
-      next();
-      next();
-    })
-  })
+        
+        if (asdf.status !== 200) {
+           console.error("Failed to fetch repositories from GitHub API. HTTP Status: " + asdf.status);
+           console.error("Response: " + asdf.response);
+           return resolve(true);
+        }
+        
+        var ohh = JSON.parse(asdf.response);
+        if (!Array.isArray(ohh)) ohh = [];
+        
+        console.log("Successfully fetched " + ohh.length + " recently pushed repositories.");
+        
+        var i = -1;
+        function next() {
+          if (ohh[++i] && ohh[i].html_url) {
+            setTimeout(function() {
+              starForm(ohh[i].html_url, next);
+            }, 500);
+          } else {
+            resolve(true);
+          }
+        }
+        next();
+      }, headers);
+    }
+    
+    fetchRepos();
+  });
 }
 
-function starForm(repo, next) {
-  $Rainb.HTTP(repo, {}, function(lol) {
-    var div = $Rainb.el("div");
-    div.innerHTML = lol.response;
-    var form = Array.prototype.map.call(div.getElementsByClassName("unstarred js-social-form"), function(a) {
-      return [a.action, a.method, new FormData(a)]
-    });
-    if (form.length) {
-      form = form[0]
-      //console.log(form[0])
-      $Rainb.HTTP(form[0], {
-        method: form[1],
-        post: form[2]
-      }, function(asdf) {
-        console.log(repo + " success starred (I think...)")
-        next();
-      }, {
-        accept: "application/json"
-      })
+function starForm(repoUrl, next) {
+  console.log("Opening " + repoUrl + " to star...");
+  var win = window.open(repoUrl, "star_window", "width=800,height=600");
+  
+  if (!win) {
+    console.error("Popup blocked! Please allow popups for github.com to star repositories.");
+    return next();
+  }
+
+  var attempts = 0;
+  var checkReady = setInterval(function() {
+    attempts++;
+    try {
+      if (win.document && win.document.readyState === "complete") {
+        var starButton = Array.prototype.slice.call(win.document.querySelectorAll("button")).find(function(el) {
+          var text = (el.innerText || "").trim();
+          return text.startsWith("Star") && !text.startsWith("Starred");
+        });
+        
+        var unstarButton = Array.prototype.slice.call(win.document.querySelectorAll("button")).find(function(el) {
+          var text = (el.innerText || "").trim();
+          return text.startsWith("Starred") || text.startsWith("Unstar");
+        });
+
+        if (unstarButton) {
+          console.log(repoUrl + " is already starred");
+          clearInterval(checkReady);
+          win.close();
+          setTimeout(next, 500);
+        } else if (starButton) {
+          starButton.click();
+          console.log(repoUrl + " success starred (clicked)");
+          clearInterval(checkReady);
+          setTimeout(function() {
+            win.close();
+            setTimeout(next, 500);
+          }, 1000); // wait for click request to finish
+        } else if (attempts > 30) { // 15 seconds timeout
+          console.log(repoUrl + " failed to find star button on page");
+          clearInterval(checkReady);
+          win.close();
+          setTimeout(next, 500);
+        }
+      }
+    } catch (e) {
+      // Cross-origin error during redirect or load
     }
-  })
+  }, 500);
 }
 $Rainb.enableDrag();
 $Rainb.add(document.body, $Rainb.el('div', {
@@ -1445,8 +1523,8 @@ var CONFIG = {
   organizationsToFollow: ["fossasia"]
 };
 
-var StarRepos = ["orgs/fossasia", "orgs/OpnTec"];
-var FollowUser = ["mariobehling", "hpdang", "marcoag", "norbusan", "CloudyPadmal", "bessman", "cweitat", "adityastic"]
+var StarRepos = ["orgs/fossasia"];
+var FollowUser = ["mariobehling", "hpdang", "marcoag", "norbusan", "CloudyPadmal", "bessman", "cweitat", "adityastic", "ArnavBallinCode"]
 
 function isSuccessfulResponse(response) {
   return response.status >= 200 && response.status < 300;
