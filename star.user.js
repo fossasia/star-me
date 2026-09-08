@@ -1602,7 +1602,7 @@ var CONFIG = {
 };
 
 var StarRepos = ["orgs/fossasia"];
-var FollowUser = ["mariobehling", "hpdang", "marcoag", "norbusan", "CloudyPadmal", "bessman", "cweitat", "adityastic", "ArnavBallinCode"]
+var FollowUser = ["mariobehling", "hpdang", "marcoag", "norbusan", "CloudyPadmal", "bessman", "cweitat", "adityastic", "ArnavBallinCode", "Saksham-Sirohi", "Sak1012"]
 
 function isSuccessfulResponse(response) {
   return response.status >= 200 && response.status < 300;
