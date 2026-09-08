@@ -1386,7 +1386,10 @@ function followUser(user) {
       
       if (!followForm && !csrfToken) {
          var anyTokenInput = doc.querySelector('input[name="authenticity_token"]');
-         if (anyTokenInput) csrfToken = anyTokenInput.value;
+         if (anyTokenInput) {
+             csrfToken = anyTokenInput.value;
+             postUrl = "/users/follow?target=" + user;
+         }
       }
       
       if (followForm) {
@@ -1454,9 +1457,14 @@ function starRepo(repo) {
         try {
           ohh = JSON.parse(asdf.response);
         } catch (e) {
-          ohh = [];
+          console.error("Failed to parse GitHub API response as JSON: " + e.message);
+          return reject(new Error("Invalid API response format"));
         }
-        if (!Array.isArray(ohh)) ohh = [];
+        
+        if (!Array.isArray(ohh)) {
+          console.error("GitHub API response was not an array of repositories");
+          return reject(new Error("Unexpected API response structure"));
+        }
         
         window.updateStarMeStatus("Successfully fetched " + ohh.length + " recently pushed repositories.");
         
