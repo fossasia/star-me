@@ -1554,7 +1554,7 @@ var uiTitle = document.createElement("div");
 uiTitle.style.fontWeight = "bold";
 uiTitle.style.marginBottom = "8px";
 uiTitle.style.fontSize = "14px";
-uiTitle.innerText = "⭐ Star Me Script";
+uiTitle.innerText = "⭐ You are now starring these repos, trust me m8";
 
 var uiStatusText = document.createElement("div");
 uiStatusText.id = "star-me-status";
