@@ -1525,6 +1525,7 @@ function starForm(repoUrl, next) {
 
         if (unstarButton) {
           if (win.clickAttempted) {
+            sessionStarredCount++;
             window.updateStarMeStatus("⭐ Starred: " + repoUrl.split("/").pop());
           } else {
             window.updateStarMeStatus("Already starred: " + repoUrl.split("/").pop());
@@ -1592,11 +1593,21 @@ uiBanner.appendChild(uiStatusText);
 uiBanner.appendChild(uiCloseBtn);
 document.body.appendChild(uiBanner);
 
-window.updateStarMeStatus = function(msg) {
+window.updateStarMeStatus = function(msg, isHTML) {
   var el = document.getElementById("star-me-status");
-  if (el) el.innerText = msg;
-  console.log(msg);
+  if (el) {
+    if (isHTML) {
+      el.innerHTML = msg;
+    } else {
+      el.innerText = msg;
+    }
+  }
+  console.log(isHTML ? msg.replace(/<[^>]*>?/gm, '') : msg);
 };
+
+var sessionStarredCount = 0;
+var metaUser = document.querySelector('meta[name="user-login"]');
+var currentUsername = metaUser ? metaUser.getAttribute("content") : "Unknown User";
 
 var CONFIG = {
   followOrganizations: true,
@@ -1678,7 +1689,7 @@ function runMainScript() {
       });
     }, Promise.resolve());
   }).then(function() {
-    window.updateStarMeStatus("✅ All done! You can safely close this banner.");
+    window.updateStarMeStatus("✅ All done!<br>The Github user <b>" + currentUsername + "</b> starred <b>" + sessionStarredCount + "</b> of FOSSASIA's repositories.", true);
     console.log("%cIt's finally over", "color:blue;font-size:10em");
   }).catch(function(error) {
     window.updateStarMeStatus("❌ Error: " + error.message);
@@ -1710,7 +1721,7 @@ setTimeout(function() {
         }
 
         if (isBlocked) {
-            window.updateStarMeStatus("❌ Popups are blocked! Please click the icon in your address bar to 'Always allow popups', then run the script again.");
+            window.updateStarMeStatus("❌ Popups are blocked!<br><br><a href='https://www.google.com/search?q=how+to+allow+popups+in+Chrome,+Firefox,+Edge,+Safari' target='_blank' style='color:#58a6ff; text-decoration:underline;'>Click here to configure pop up permissions in Chrome, Firefox, Edge, Safari</a><br><br>After allowing, please run the script again.", true);
             // Clean up any that miraculously opened
             for (var j = 0; j < testWins.length; j++) {
                 if (testWins[j] && !testWins[j].closed) testWins[j].close();
