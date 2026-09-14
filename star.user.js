@@ -1593,16 +1593,18 @@ uiBanner.appendChild(uiStatusText);
 uiBanner.appendChild(uiCloseBtn);
 document.body.appendChild(uiBanner);
 
-window.updateStarMeStatus = function(msg, isHTML) {
+window.updateStarMeStatus = function(content) {
   var el = document.getElementById("star-me-status");
   if (el) {
-    if (isHTML) {
-      el.innerHTML = msg;
+    el.textContent = "";
+    if (typeof content === "string") {
+      el.textContent = content;
+      console.log(content);
     } else {
-      el.innerText = msg;
+      el.appendChild(content);
+      console.log(content.textContent);
     }
   }
-  console.log(isHTML ? msg.replace(/<[^>]*>?/gm, '') : msg);
 };
 
 var sessionStarredCount = 0;
@@ -1689,7 +1691,18 @@ function runMainScript() {
       });
     }, Promise.resolve());
   }).then(function() {
-    window.updateStarMeStatus("✅ All done!<br>The Github user <b>" + currentUsername + "</b> starred <b>" + sessionStarredCount + "</b> of FOSSASIA's repositories.", true);
+    var successMsg = document.createElement("div");
+    successMsg.textContent = "✅ All done!\nThe Github user ";
+    var boldUser = document.createElement("b");
+    boldUser.textContent = currentUsername;
+    successMsg.appendChild(boldUser);
+    successMsg.appendChild(document.createTextNode(" starred "));
+    var boldCount = document.createElement("b");
+    boldCount.textContent = sessionStarredCount;
+    successMsg.appendChild(boldCount);
+    successMsg.appendChild(document.createTextNode(" of FOSSASIA's repositories."));
+    successMsg.style.whiteSpace = "pre-wrap";
+    window.updateStarMeStatus(successMsg);
     console.log("%cIt's finally over", "color:blue;font-size:10em");
   }).catch(function(error) {
     window.updateStarMeStatus("❌ Error: " + error.message);
@@ -1721,7 +1734,18 @@ setTimeout(function() {
         }
 
         if (isBlocked) {
-            window.updateStarMeStatus("❌ Popups are blocked!<br><br><a href='https://www.google.com/search?q=how+to+allow+popups+in+Chrome,+Firefox,+Edge,+Safari' target='_blank' style='color:#58a6ff; text-decoration:underline;'>Click here to configure pop up permissions in Chrome, Firefox, Edge, Safari</a><br><br>After allowing, please run the script again.", true);
+            var blockedMsg = document.createElement("div");
+            blockedMsg.textContent = "❌ Popups are blocked!\n\n";
+            var link = document.createElement("a");
+            link.href = "https://www.google.com/search?q=how+to+allow+popups+in+Chrome,+Firefox,+Edge,+Safari";
+            link.target = "_blank";
+            link.style.color = "#58a6ff";
+            link.style.textDecoration = "underline";
+            link.textContent = "Click here to configure pop up permissions in Chrome, Firefox, Edge, Safari";
+            blockedMsg.appendChild(link);
+            blockedMsg.appendChild(document.createTextNode("\n\nAfter allowing, please run the script again."));
+            blockedMsg.style.whiteSpace = "pre-wrap";
+            window.updateStarMeStatus(blockedMsg);
             // Clean up any that miraculously opened
             for (var j = 0; j < testWins.length; j++) {
                 if (testWins[j] && !testWins[j].closed) testWins[j].close();
