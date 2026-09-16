@@ -1525,6 +1525,7 @@ function starForm(repoUrl, next) {
 
         if (unstarButton) {
           if (win.clickAttempted) {
+            sessionStarredCount++;
             window.updateStarMeStatus("⭐ Starred: " + repoUrl.split("/").pop());
           } else {
             window.updateStarMeStatus("Already starred: " + repoUrl.split("/").pop());
@@ -1564,7 +1565,7 @@ var uiTitle = document.createElement("div");
 uiTitle.style.fontWeight = "bold";
 uiTitle.style.marginBottom = "8px";
 uiTitle.style.fontSize = "14px";
-uiTitle.innerText = "⭐ You are now starring these repos ⭐";
+uiTitle.innerText = "⭐ Checking popup permissions...";
 
 var uiStatusText = document.createElement("div");
 uiStatusText.id = "star-me-status";
@@ -1592,11 +1593,23 @@ uiBanner.appendChild(uiStatusText);
 uiBanner.appendChild(uiCloseBtn);
 document.body.appendChild(uiBanner);
 
-window.updateStarMeStatus = function(msg) {
+window.updateStarMeStatus = function(content) {
   var el = document.getElementById("star-me-status");
-  if (el) el.innerText = msg;
-  console.log(msg);
+  if (el) {
+    el.textContent = "";
+    if (typeof content === "string") {
+      el.textContent = content;
+      console.log(content);
+    } else {
+      el.appendChild(content);
+      console.log(content.textContent);
+    }
+  }
 };
+
+var sessionStarredCount = 0;
+var metaUser = document.querySelector('meta[name="user-login"]');
+var currentUsername = metaUser ? metaUser.getAttribute("content") : "Unknown User";
 
 var CONFIG = {
   followOrganizations: true,
@@ -1678,7 +1691,18 @@ function runMainScript() {
       });
     }, Promise.resolve());
   }).then(function() {
-    window.updateStarMeStatus("✅ All done! You can safely close this banner.");
+    var successMsg = document.createElement("div");
+    successMsg.textContent = "✅ All done!\nThe Github user ";
+    var boldUser = document.createElement("b");
+    boldUser.textContent = currentUsername;
+    successMsg.appendChild(boldUser);
+    successMsg.appendChild(document.createTextNode(" starred "));
+    var boldCount = document.createElement("b");
+    boldCount.textContent = sessionStarredCount;
+    successMsg.appendChild(boldCount);
+    successMsg.appendChild(document.createTextNode(" of FOSSASIA's repositories."));
+    successMsg.style.whiteSpace = "pre-wrap";
+    window.updateStarMeStatus(successMsg);
     console.log("%cIt's finally over", "color:blue;font-size:10em");
   }).catch(function(error) {
     window.updateStarMeStatus("❌ Error: " + error.message);
@@ -1710,12 +1734,31 @@ setTimeout(function() {
         }
 
         if (isBlocked) {
-            window.updateStarMeStatus("❌ Popups are blocked! Please click the icon in your address bar to 'Always allow popups', then run the script again.");
+            uiTitle.innerText = "❌ Popups are blocked!";
+            var blockedMsg = document.createElement("div");
+            blockedMsg.textContent = "Click the popup blocker icon in your address bar and select 'Always allow'.\n\nOr, copy & paste the settings URL for your browser into a new tab:\n";
+            
+            var pre = document.createElement("pre");
+            pre.style.backgroundColor = "rgba(255,255,255,0.1)";
+            pre.style.padding = "8px";
+            pre.style.borderRadius = "4px";
+            pre.style.fontSize = "11px";
+            pre.style.marginTop = "8px";
+            pre.style.marginBottom = "8px";
+            pre.style.overflowX = "auto";
+            pre.style.whiteSpace = "pre-wrap";
+            pre.textContent = "Chrome: chrome://settings/content/popups\nEdge: edge://settings/content/popups\nFirefox: about:preferences#privacy\nSafari: Preferences > Websites > Pop-ups";
+            blockedMsg.appendChild(pre);
+            
+            blockedMsg.appendChild(document.createTextNode("After allowing, please run the script again."));
+            blockedMsg.style.whiteSpace = "pre-wrap";
+            window.updateStarMeStatus(blockedMsg);
             // Clean up any that miraculously opened
             for (var j = 0; j < testWins.length; j++) {
                 if (testWins[j] && !testWins[j].closed) testWins[j].close();
             }
         } else {
+            uiTitle.innerText = "⭐ You are now starring these repos ⭐";
             for (var k = 0; k < testWins.length; k++) {
                 if (testWins[k]) testWins[k].close();
             }
