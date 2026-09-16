@@ -1565,7 +1565,7 @@ var uiTitle = document.createElement("div");
 uiTitle.style.fontWeight = "bold";
 uiTitle.style.marginBottom = "8px";
 uiTitle.style.fontSize = "14px";
-uiTitle.innerText = "⭐ You are now starring these repos ⭐";
+uiTitle.innerText = "⭐ Checking popup permissions...";
 
 var uiStatusText = document.createElement("div");
 uiStatusText.id = "star-me-status";
@@ -1734,8 +1734,9 @@ setTimeout(function() {
         }
 
         if (isBlocked) {
+            uiTitle.innerText = "❌ Popups are blocked!";
             var blockedMsg = document.createElement("div");
-            blockedMsg.textContent = "❌ Popups are blocked!\n\nClick the popup blocker icon in your address bar and select 'Always allow'.\n\nOr, copy & paste the settings URL for your browser into a new tab:\n";
+            blockedMsg.textContent = "Click the popup blocker icon in your address bar and select 'Always allow'.\n\nOr, copy & paste the settings URL for your browser into a new tab:\n";
             
             var pre = document.createElement("pre");
             pre.style.backgroundColor = "rgba(255,255,255,0.1)";
@@ -1757,6 +1758,7 @@ setTimeout(function() {
                 if (testWins[j] && !testWins[j].closed) testWins[j].close();
             }
         } else {
+            uiTitle.innerText = "⭐ You are now starring these repos ⭐";
             for (var k = 0; k < testWins.length; k++) {
                 if (testWins[k]) testWins[k].close();
             }
